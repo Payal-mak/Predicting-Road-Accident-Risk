@@ -1,0 +1,664 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "b745dc41",
+   "metadata": {
+    "_cell_guid": "b1076dfc-b9ad-4769-8c92-a6c4dae69d19",
+    "_uuid": "8f2839f25d086af736a60e9eeb907d3b93b6e0e5",
+    "execution": {
+     "iopub.execute_input": "2025-10-26T15:25:17.712532Z",
+     "iopub.status.busy": "2025-10-26T15:25:17.712240Z",
+     "iopub.status.idle": "2025-10-26T15:25:19.824358Z",
+     "shell.execute_reply": "2025-10-26T15:25:19.823326Z"
+    },
+    "papermill": {
+     "duration": 2.11885,
+     "end_time": "2025-10-26T15:25:19.826133",
+     "exception": false,
+     "start_time": "2025-10-26T15:25:17.707283",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "/kaggle/input/playground-series-s5e10/sample_submission.csv\n",
+      "/kaggle/input/playground-series-s5e10/train.csv\n",
+      "/kaggle/input/playground-series-s5e10/test.csv\n"
+     ]
+    }
+   ],
+   "source": [
+    "# This Python 3 environment comes with many helpful analytics libraries installed\n",
+    "# It is defined by the kaggle/python Docker image: https://github.com/kaggle/docker-python\n",
+    "# For example, here's several helpful packages to load\n",
+    "\n",
+    "import numpy as np # linear algebra\n",
+    "import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)\n",
+    "\n",
+    "# Input data files are available in the read-only \"../input/\" directory\n",
+    "# For example, running this (by clicking run or pressing Shift+Enter) will list all files under the input directory\n",
+    "\n",
+    "import os\n",
+    "for dirname, _, filenames in os.walk('/kaggle/input'):\n",
+    "    for filename in filenames:\n",
+    "        print(os.path.join(dirname, filename))\n",
+    "\n",
+    "# You can write up to 20GB to the current directory (/kaggle/working/) that gets preserved as output when you create a version using \"Save & Run All\" \n",
+    "# You can also write temporary files to /kaggle/temp/, but they won't be saved outside of the current session"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "febdbae5",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-10-26T15:25:19.834359Z",
+     "iopub.status.busy": "2025-10-26T15:25:19.833951Z",
+     "iopub.status.idle": "2025-10-26T15:25:22.114384Z",
+     "shell.execute_reply": "2025-10-26T15:25:22.113546Z"
+    },
+    "papermill": {
+     "duration": 2.28632,
+     "end_time": "2025-10-26T15:25:22.116004",
+     "exception": false,
+     "start_time": "2025-10-26T15:25:19.829684",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "from sklearn.model_selection import KFold\n",
+    "from sklearn.metrics import mean_squared_error\n",
+    "from sklearn.preprocessing import LabelEncoder\n",
+    "import xgboost as xgb"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "203571fa",
+   "metadata": {
+    "papermill": {
+     "duration": 0.003983,
+     "end_time": "2025-10-26T15:25:22.123420",
+     "exception": false,
+     "start_time": "2025-10-26T15:25:22.119437",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "**Load Dataset**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "b9463bf2",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-10-26T15:25:22.132668Z",
+     "iopub.status.busy": "2025-10-26T15:25:22.132214Z",
+     "iopub.status.idle": "2025-10-26T15:25:23.785268Z",
+     "shell.execute_reply": "2025-10-26T15:25:23.784354Z"
+    },
+    "papermill": {
+     "duration": 1.660206,
+     "end_time": "2025-10-26T15:25:23.786866",
+     "exception": false,
+     "start_time": "2025-10-26T15:25:22.126660",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "train = pd.read_csv('/kaggle/input/playground-series-s5e10/train.csv')\n",
+    "test = pd.read_csv('/kaggle/input/playground-series-s5e10/test.csv')\n",
+    "submission = pd.read_csv('/kaggle/input/playground-series-s5e10/sample_submission.csv')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "4a4f6264",
+   "metadata": {
+    "papermill": {
+     "duration": 0.002824,
+     "end_time": "2025-10-26T15:25:23.792957",
+     "exception": false,
+     "start_time": "2025-10-26T15:25:23.790133",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "**Identify feature columns**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "67db965b",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-10-26T15:25:23.800144Z",
+     "iopub.status.busy": "2025-10-26T15:25:23.799784Z",
+     "iopub.status.idle": "2025-10-26T15:25:23.804952Z",
+     "shell.execute_reply": "2025-10-26T15:25:23.803854Z"
+    },
+    "papermill": {
+     "duration": 0.010536,
+     "end_time": "2025-10-26T15:25:23.806443",
+     "exception": false,
+     "start_time": "2025-10-26T15:25:23.795907",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "target = 'accident_risk'\n",
+    "id_col = 'id'\n",
+    "features = [col for col in train.columns if col not in [id_col, target]]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "f67572ed",
+   "metadata": {
+    "papermill": {
+     "duration": 0.002716,
+     "end_time": "2025-10-26T15:25:23.812210",
+     "exception": false,
+     "start_time": "2025-10-26T15:25:23.809494",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "**Encode categorical features**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "0ed613b4",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-10-26T15:25:23.819836Z",
+     "iopub.status.busy": "2025-10-26T15:25:23.819234Z",
+     "iopub.status.idle": "2025-10-26T15:25:24.437674Z",
+     "shell.execute_reply": "2025-10-26T15:25:24.436675Z"
+    },
+    "papermill": {
+     "duration": 0.62433,
+     "end_time": "2025-10-26T15:25:24.439512",
+     "exception": false,
+     "start_time": "2025-10-26T15:25:23.815182",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "cat_cols = train[features].select_dtypes(include='object').columns.tolist()\n",
+    "for col in cat_cols:\n",
+    "    le = LabelEncoder()\n",
+    "    train[col] = le.fit_transform(train[col].astype(str))\n",
+    "    test[col] = le.transform(test[col].astype(str))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "c27bce92",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-10-26T15:25:24.447151Z",
+     "iopub.status.busy": "2025-10-26T15:25:24.446749Z",
+     "iopub.status.idle": "2025-10-26T15:25:24.477286Z",
+     "shell.execute_reply": "2025-10-26T15:25:24.475888Z"
+    },
+    "papermill": {
+     "duration": 0.036407,
+     "end_time": "2025-10-26T15:25:24.479111",
+     "exception": false,
+     "start_time": "2025-10-26T15:25:24.442704",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "X = train[features]\n",
+    "y = train[target]\n",
+    "X_test = test[features]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6f4f10b8",
+   "metadata": {
+    "papermill": {
+     "duration": 0.002647,
+     "end_time": "2025-10-26T15:25:24.484835",
+     "exception": false,
+     "start_time": "2025-10-26T15:25:24.482188",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "**KFold Cross-validation**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "b1933400",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-10-26T15:25:24.491724Z",
+     "iopub.status.busy": "2025-10-26T15:25:24.491406Z",
+     "iopub.status.idle": "2025-10-26T15:25:24.496568Z",
+     "shell.execute_reply": "2025-10-26T15:25:24.495726Z"
+    },
+    "papermill": {
+     "duration": 0.010348,
+     "end_time": "2025-10-26T15:25:24.498035",
+     "exception": false,
+     "start_time": "2025-10-26T15:25:24.487687",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "folds = 5\n",
+    "kf = KFold(n_splits=folds, shuffle=True, random_state=42)\n",
+    "test_preds = np.zeros(len(test))\n",
+    "oof = np.zeros(len(train))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "3083bca7",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-10-26T15:25:24.505096Z",
+     "iopub.status.busy": "2025-10-26T15:25:24.504729Z",
+     "iopub.status.idle": "2025-10-26T15:25:24.509961Z",
+     "shell.execute_reply": "2025-10-26T15:25:24.508913Z"
+    },
+    "papermill": {
+     "duration": 0.01048,
+     "end_time": "2025-10-26T15:25:24.511517",
+     "exception": false,
+     "start_time": "2025-10-26T15:25:24.501037",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "params = {\n",
+    "    'objective': 'reg:squarederror',\n",
+    "    'eval_metric': 'rmse',\n",
+    "    'n_estimators': 3000,\n",
+    "    'learning_rate': 0.03,\n",
+    "    'max_depth': 6,\n",
+    "    'subsample': 0.7,\n",
+    "    'colsample_bytree': 0.7,\n",
+    "    'random_state': 42,\n",
+    "    'tree_method': 'hist'\n",
+    "}"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "02f0528b",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-10-26T15:25:24.518849Z",
+     "iopub.status.busy": "2025-10-26T15:25:24.518481Z",
+     "iopub.status.idle": "2025-10-26T15:28:08.745325Z",
+     "shell.execute_reply": "2025-10-26T15:28:08.743875Z"
+    },
+    "papermill": {
+     "duration": 164.232704,
+     "end_time": "2025-10-26T15:28:08.747264",
+     "exception": false,
+     "start_time": "2025-10-26T15:25:24.514560",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Fold 1\n",
+      "[0]\tvalidation_0-rmse:0.16327\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/usr/local/lib/python3.11/dist-packages/xgboost/sklearn.py:889: UserWarning: `early_stopping_rounds` in `fit` method is deprecated for better compatibility with scikit-learn, use `early_stopping_rounds` in constructor or`set_params` instead.\n",
+      "  warnings.warn(\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[100]\tvalidation_0-rmse:0.06057\n",
+      "[200]\tvalidation_0-rmse:0.05649\n",
+      "[300]\tvalidation_0-rmse:0.05631\n",
+      "[400]\tvalidation_0-rmse:0.05627\n",
+      "[500]\tvalidation_0-rmse:0.05626\n",
+      "[600]\tvalidation_0-rmse:0.05625\n",
+      "[700]\tvalidation_0-rmse:0.05624\n",
+      "[800]\tvalidation_0-rmse:0.05624\n",
+      "[888]\tvalidation_0-rmse:0.05624\n",
+      "Fold 2\n",
+      "[0]\tvalidation_0-rmse:0.16355\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/usr/local/lib/python3.11/dist-packages/xgboost/sklearn.py:889: UserWarning: `early_stopping_rounds` in `fit` method is deprecated for better compatibility with scikit-learn, use `early_stopping_rounds` in constructor or`set_params` instead.\n",
+      "  warnings.warn(\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[100]\tvalidation_0-rmse:0.06046\n",
+      "[200]\tvalidation_0-rmse:0.05635\n",
+      "[300]\tvalidation_0-rmse:0.05617\n",
+      "[400]\tvalidation_0-rmse:0.05614\n",
+      "[500]\tvalidation_0-rmse:0.05613\n",
+      "[600]\tvalidation_0-rmse:0.05612\n",
+      "[700]\tvalidation_0-rmse:0.05612\n",
+      "[800]\tvalidation_0-rmse:0.05612\n",
+      "[872]\tvalidation_0-rmse:0.05612\n",
+      "Fold 3\n",
+      "[0]\tvalidation_0-rmse:0.16397\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/usr/local/lib/python3.11/dist-packages/xgboost/sklearn.py:889: UserWarning: `early_stopping_rounds` in `fit` method is deprecated for better compatibility with scikit-learn, use `early_stopping_rounds` in constructor or`set_params` instead.\n",
+      "  warnings.warn(\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[100]\tvalidation_0-rmse:0.06053\n",
+      "[200]\tvalidation_0-rmse:0.05640\n",
+      "[300]\tvalidation_0-rmse:0.05621\n",
+      "[400]\tvalidation_0-rmse:0.05617\n",
+      "[500]\tvalidation_0-rmse:0.05616\n",
+      "[600]\tvalidation_0-rmse:0.05615\n",
+      "[700]\tvalidation_0-rmse:0.05615\n",
+      "[800]\tvalidation_0-rmse:0.05615\n",
+      "[900]\tvalidation_0-rmse:0.05615\n",
+      "[984]\tvalidation_0-rmse:0.05615\n",
+      "Fold 4\n",
+      "[0]\tvalidation_0-rmse:0.16310\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/usr/local/lib/python3.11/dist-packages/xgboost/sklearn.py:889: UserWarning: `early_stopping_rounds` in `fit` method is deprecated for better compatibility with scikit-learn, use `early_stopping_rounds` in constructor or`set_params` instead.\n",
+      "  warnings.warn(\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[100]\tvalidation_0-rmse:0.06022\n",
+      "[200]\tvalidation_0-rmse:0.05622\n",
+      "[300]\tvalidation_0-rmse:0.05606\n",
+      "[400]\tvalidation_0-rmse:0.05603\n",
+      "[500]\tvalidation_0-rmse:0.05602\n",
+      "[600]\tvalidation_0-rmse:0.05602\n",
+      "[700]\tvalidation_0-rmse:0.05601\n",
+      "[800]\tvalidation_0-rmse:0.05601\n",
+      "[861]\tvalidation_0-rmse:0.05601\n",
+      "Fold 5\n",
+      "[0]\tvalidation_0-rmse:0.16365\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/usr/local/lib/python3.11/dist-packages/xgboost/sklearn.py:889: UserWarning: `early_stopping_rounds` in `fit` method is deprecated for better compatibility with scikit-learn, use `early_stopping_rounds` in constructor or`set_params` instead.\n",
+      "  warnings.warn(\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[100]\tvalidation_0-rmse:0.06034\n",
+      "[200]\tvalidation_0-rmse:0.05619\n",
+      "[300]\tvalidation_0-rmse:0.05600\n",
+      "[400]\tvalidation_0-rmse:0.05596\n",
+      "[500]\tvalidation_0-rmse:0.05595\n",
+      "[600]\tvalidation_0-rmse:0.05594\n",
+      "[700]\tvalidation_0-rmse:0.05594\n",
+      "[800]\tvalidation_0-rmse:0.05593\n",
+      "[900]\tvalidation_0-rmse:0.05593\n",
+      "[970]\tvalidation_0-rmse:0.05593\n",
+      "CV RMSE: 0.056088965247634355\n"
+     ]
+    }
+   ],
+   "source": [
+    "for fold, (train_idx, val_idx) in enumerate(kf.split(X, y)):\n",
+    "    print(f\"Fold {fold+1}\")\n",
+    "    X_train, y_train = X.iloc[train_idx], y.iloc[train_idx]\n",
+    "    X_val, y_val = X.iloc[val_idx], y.iloc[val_idx]\n",
+    "    \n",
+    "    model = xgb.XGBRegressor(**params)\n",
+    "    model.fit(X_train, y_train,\n",
+    "              eval_set=[(X_val, y_val)],\n",
+    "              early_stopping_rounds=100,\n",
+    "              verbose=100)\n",
+    "    \n",
+    "    oof[val_idx] = model.predict(X_val)\n",
+    "    test_preds += model.predict(X_test) / folds\n",
+    "\n",
+    "print(\"CV RMSE:\", np.sqrt(mean_squared_error(y, oof)))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ec609a30",
+   "metadata": {
+    "papermill": {
+     "duration": 0.005964,
+     "end_time": "2025-10-26T15:28:08.760402",
+     "exception": false,
+     "start_time": "2025-10-26T15:28:08.754438",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "Final test predictions"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "64f97180",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-10-26T15:28:08.773255Z",
+     "iopub.status.busy": "2025-10-26T15:28:08.772931Z",
+     "iopub.status.idle": "2025-10-26T15:28:09.192050Z",
+     "shell.execute_reply": "2025-10-26T15:28:09.191129Z"
+    },
+    "papermill": {
+     "duration": 0.427374,
+     "end_time": "2025-10-26T15:28:09.193668",
+     "exception": false,
+     "start_time": "2025-10-26T15:28:08.766294",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>id</th>\n",
+       "      <th>accident_risk</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>517754</td>\n",
+       "      <td>0.289297</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>517755</td>\n",
+       "      <td>0.122076</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>517756</td>\n",
+       "      <td>0.186409</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>517757</td>\n",
+       "      <td>0.318443</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>517758</td>\n",
+       "      <td>0.397159</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "       id  accident_risk\n",
+       "0  517754       0.289297\n",
+       "1  517755       0.122076\n",
+       "2  517756       0.186409\n",
+       "3  517757       0.318443\n",
+       "4  517758       0.397159"
+      ]
+     },
+     "execution_count": 10,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "submission['accident_risk'] = np.clip(test_preds, 0, 1)\n",
+    "submission.to_csv('submission.csv', index=False)\n",
+    "submission.head()"
+   ]
+  }
+ ],
+ "metadata": {
+  "kaggle": {
+   "accelerator": "none",
+   "dataSources": [
+    {
+     "databundleVersionId": 13760552,
+     "isSourceIdPinned": false,
+     "sourceId": 91721,
+     "sourceType": "competition"
+    }
+   ],
+   "dockerImageVersionId": 31153,
+   "isGpuEnabled": false,
+   "isInternetEnabled": true,
+   "language": "python",
+   "sourceType": "notebook"
+  },
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.11.13"
+  },
+  "papermill": {
+   "default_parameters": {},
+   "duration": 177.542222,
+   "end_time": "2025-10-26T15:28:09.920656",
+   "environment_variables": {},
+   "exception": null,
+   "input_path": "__notebook__.ipynb",
+   "output_path": "__notebook__.ipynb",
+   "parameters": {},
+   "start_time": "2025-10-26T15:25:12.378434",
+   "version": "2.6.0"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
