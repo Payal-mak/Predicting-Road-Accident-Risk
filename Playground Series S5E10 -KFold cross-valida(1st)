@@ -3,21 +3,21 @@
   {
    "cell_type": "code",
    "execution_count": 1,
-   "id": "b745dc41",
+   "id": "3dfde1f7",
    "metadata": {
     "_cell_guid": "b1076dfc-b9ad-4769-8c92-a6c4dae69d19",
     "_uuid": "8f2839f25d086af736a60e9eeb907d3b93b6e0e5",
     "execution": {
-     "iopub.execute_input": "2025-10-26T15:25:17.712532Z",
-     "iopub.status.busy": "2025-10-26T15:25:17.712240Z",
-     "iopub.status.idle": "2025-10-26T15:25:19.824358Z",
-     "shell.execute_reply": "2025-10-26T15:25:19.823326Z"
+     "iopub.execute_input": "2025-10-26T18:19:16.081555Z",
+     "iopub.status.busy": "2025-10-26T18:19:16.081181Z",
+     "iopub.status.idle": "2025-10-26T18:19:18.402748Z",
+     "shell.execute_reply": "2025-10-26T18:19:18.401570Z"
     },
     "papermill": {
-     "duration": 2.11885,
-     "end_time": "2025-10-26T15:25:19.826133",
+     "duration": 2.329894,
+     "end_time": "2025-10-26T18:19:18.404484",
      "exception": false,
-     "start_time": "2025-10-26T15:25:17.707283",
+     "start_time": "2025-10-26T18:19:16.074590",
      "status": "completed"
     },
     "tags": []
@@ -56,19 +56,19 @@
   {
    "cell_type": "code",
    "execution_count": 2,
-   "id": "febdbae5",
+   "id": "8e390da7",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-10-26T15:25:19.834359Z",
-     "iopub.status.busy": "2025-10-26T15:25:19.833951Z",
-     "iopub.status.idle": "2025-10-26T15:25:22.114384Z",
-     "shell.execute_reply": "2025-10-26T15:25:22.113546Z"
+     "iopub.execute_input": "2025-10-26T18:19:18.412936Z",
+     "iopub.status.busy": "2025-10-26T18:19:18.412518Z",
+     "iopub.status.idle": "2025-10-26T18:19:27.124552Z",
+     "shell.execute_reply": "2025-10-26T18:19:27.123315Z"
     },
     "papermill": {
-     "duration": 2.28632,
-     "end_time": "2025-10-26T15:25:22.116004",
+     "duration": 8.718145,
+     "end_time": "2025-10-26T18:19:27.126337",
      "exception": false,
-     "start_time": "2025-10-26T15:25:19.829684",
+     "start_time": "2025-10-26T18:19:18.408192",
      "status": "completed"
     },
     "tags": []
@@ -79,19 +79,18 @@
     "import numpy as np\n",
     "from sklearn.model_selection import KFold\n",
     "from sklearn.metrics import mean_squared_error\n",
-    "from sklearn.preprocessing import LabelEncoder\n",
-    "import xgboost as xgb"
+    "import lightgbm as lgb"
    ]
   },
   {
    "cell_type": "markdown",
-   "id": "203571fa",
+   "id": "e279d424",
    "metadata": {
     "papermill": {
-     "duration": 0.003983,
-     "end_time": "2025-10-26T15:25:22.123420",
+     "duration": 0.003135,
+     "end_time": "2025-10-26T18:19:27.133157",
      "exception": false,
-     "start_time": "2025-10-26T15:25:22.119437",
+     "start_time": "2025-10-26T18:19:27.130022",
      "status": "completed"
     },
     "tags": []
@@ -103,19 +102,19 @@
   {
    "cell_type": "code",
    "execution_count": 3,
-   "id": "b9463bf2",
+   "id": "6d6bfb75",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-10-26T15:25:22.132668Z",
-     "iopub.status.busy": "2025-10-26T15:25:22.132214Z",
-     "iopub.status.idle": "2025-10-26T15:25:23.785268Z",
-     "shell.execute_reply": "2025-10-26T15:25:23.784354Z"
+     "iopub.execute_input": "2025-10-26T18:19:27.141389Z",
+     "iopub.status.busy": "2025-10-26T18:19:27.140714Z",
+     "iopub.status.idle": "2025-10-26T18:19:28.752501Z",
+     "shell.execute_reply": "2025-10-26T18:19:28.751256Z"
     },
     "papermill": {
-     "duration": 1.660206,
-     "end_time": "2025-10-26T15:25:23.786866",
+     "duration": 1.617763,
+     "end_time": "2025-10-26T18:19:28.754206",
      "exception": false,
-     "start_time": "2025-10-26T15:25:22.126660",
+     "start_time": "2025-10-26T18:19:27.136443",
      "status": "completed"
     },
     "tags": []
@@ -129,154 +128,224 @@
   },
   {
    "cell_type": "markdown",
-   "id": "4a4f6264",
+   "id": "ace0adca",
    "metadata": {
     "papermill": {
-     "duration": 0.002824,
-     "end_time": "2025-10-26T15:25:23.792957",
+     "duration": 0.003597,
+     "end_time": "2025-10-26T18:19:28.761373",
      "exception": false,
-     "start_time": "2025-10-26T15:25:23.790133",
+     "start_time": "2025-10-26T18:19:28.757776",
      "status": "completed"
     },
     "tags": []
    },
    "source": [
-    "**Identify feature columns**"
+    "**Basic feature engineering**"
    ]
   },
   {
    "cell_type": "code",
    "execution_count": 4,
-   "id": "67db965b",
+   "id": "1cb5f727",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-10-26T15:25:23.800144Z",
-     "iopub.status.busy": "2025-10-26T15:25:23.799784Z",
-     "iopub.status.idle": "2025-10-26T15:25:23.804952Z",
-     "shell.execute_reply": "2025-10-26T15:25:23.803854Z"
+     "iopub.execute_input": "2025-10-26T18:19:28.769050Z",
+     "iopub.status.busy": "2025-10-26T18:19:28.768763Z",
+     "iopub.status.idle": "2025-10-26T18:19:28.796723Z",
+     "shell.execute_reply": "2025-10-26T18:19:28.795522Z"
     },
     "papermill": {
-     "duration": 0.010536,
-     "end_time": "2025-10-26T15:25:23.806443",
+     "duration": 0.033936,
+     "end_time": "2025-10-26T18:19:28.798669",
      "exception": false,
-     "start_time": "2025-10-26T15:25:23.795907",
+     "start_time": "2025-10-26T18:19:28.764733",
      "status": "completed"
     },
     "tags": []
    },
    "outputs": [],
    "source": [
-    "target = 'accident_risk'\n",
-    "id_col = 'id'\n",
-    "features = [col for col in train.columns if col not in [id_col, target]]"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "id": "f67572ed",
-   "metadata": {
-    "papermill": {
-     "duration": 0.002716,
-     "end_time": "2025-10-26T15:25:23.812210",
-     "exception": false,
-     "start_time": "2025-10-26T15:25:23.809494",
-     "status": "completed"
-    },
-    "tags": []
-   },
-   "source": [
-    "**Encode categorical features**"
+    "train['curv_speed'] = train['curvature'] * train['speed_limit']\n",
+    "test['curv_speed'] = test['curvature'] * test['speed_limit']\n",
+    "train['lane_speed'] = train['num_lanes'] * train['speed_limit']\n",
+    "test['lane_speed'] = test['num_lanes'] * test['speed_limit']"
    ]
   },
   {
    "cell_type": "code",
    "execution_count": 5,
-   "id": "0ed613b4",
+   "id": "23c09c61",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-10-26T15:25:23.819836Z",
-     "iopub.status.busy": "2025-10-26T15:25:23.819234Z",
-     "iopub.status.idle": "2025-10-26T15:25:24.437674Z",
-     "shell.execute_reply": "2025-10-26T15:25:24.436675Z"
+     "iopub.execute_input": "2025-10-26T18:19:28.807491Z",
+     "iopub.status.busy": "2025-10-26T18:19:28.807108Z",
+     "iopub.status.idle": "2025-10-26T18:19:28.831806Z",
+     "shell.execute_reply": "2025-10-26T18:19:28.830189Z"
     },
     "papermill": {
-     "duration": 0.62433,
-     "end_time": "2025-10-26T15:25:24.439512",
+     "duration": 0.030672,
+     "end_time": "2025-10-26T18:19:28.833534",
      "exception": false,
-     "start_time": "2025-10-26T15:25:23.815182",
+     "start_time": "2025-10-26T18:19:28.802862",
      "status": "completed"
     },
     "tags": []
    },
    "outputs": [],
    "source": [
-    "cat_cols = train[features].select_dtypes(include='object').columns.tolist()\n",
-    "for col in cat_cols:\n",
-    "    le = LabelEncoder()\n",
-    "    train[col] = le.fit_transform(train[col].astype(str))\n",
-    "    test[col] = le.transform(test[col].astype(str))"
+    "for col in ['curvature', 'num_reported_accidents']:\n",
+    "    train[col+'_log'] = np.log1p(train[col])\n",
+    "    test[col+'_log'] = np.log1p(test[col])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "1b58244b",
+   "metadata": {
+    "papermill": {
+     "duration": 0.003114,
+     "end_time": "2025-10-26T18:19:28.840362",
+     "exception": false,
+     "start_time": "2025-10-26T18:19:28.837248",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "**Target encoding for categoricals**"
    ]
   },
   {
    "cell_type": "code",
    "execution_count": 6,
-   "id": "c27bce92",
+   "id": "90ada395",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-10-26T15:25:24.447151Z",
-     "iopub.status.busy": "2025-10-26T15:25:24.446749Z",
-     "iopub.status.idle": "2025-10-26T15:25:24.477286Z",
-     "shell.execute_reply": "2025-10-26T15:25:24.475888Z"
+     "iopub.execute_input": "2025-10-26T18:19:28.848464Z",
+     "iopub.status.busy": "2025-10-26T18:19:28.848043Z",
+     "iopub.status.idle": "2025-10-26T18:19:29.219538Z",
+     "shell.execute_reply": "2025-10-26T18:19:29.218587Z"
     },
     "papermill": {
-     "duration": 0.036407,
-     "end_time": "2025-10-26T15:25:24.479111",
+     "duration": 0.377786,
+     "end_time": "2025-10-26T18:19:29.221447",
      "exception": false,
-     "start_time": "2025-10-26T15:25:24.442704",
+     "start_time": "2025-10-26T18:19:28.843661",
      "status": "completed"
     },
     "tags": []
    },
    "outputs": [],
    "source": [
-    "X = train[features]\n",
-    "y = train[target]\n",
-    "X_test = test[features]"
+    "def target_encode(train_df, test_df, col, target='accident_risk'):\n",
+    "    means = train_df.groupby(col)[target].mean()\n",
+    "    train_df[col+'_te'] = train_df[col].map(means)\n",
+    "    test_df[col+'_te'] = test_df[col].map(means).fillna(train_df[target].mean())\n",
+    "    return train_df, test_df\n",
+    "\n",
+    "for cat in ['road_type', 'weather', 'lighting', 'time_of_day']:\n",
+    "    train, test = target_encode(train, test, cat)"
    ]
   },
   {
    "cell_type": "markdown",
-   "id": "6f4f10b8",
+   "id": "38eb32ec",
    "metadata": {
     "papermill": {
-     "duration": 0.002647,
-     "end_time": "2025-10-26T15:25:24.484835",
+     "duration": 0.003017,
+     "end_time": "2025-10-26T18:19:29.227756",
      "exception": false,
-     "start_time": "2025-10-26T15:25:24.482188",
+     "start_time": "2025-10-26T18:19:29.224739",
      "status": "completed"
     },
     "tags": []
    },
    "source": [
-    "**KFold Cross-validation**"
+    "**Final feature set (remove original categorical columns and id/target)**"
    ]
   },
   {
    "cell_type": "code",
    "execution_count": 7,
-   "id": "b1933400",
+   "id": "66a4b056",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-10-26T15:25:24.491724Z",
-     "iopub.status.busy": "2025-10-26T15:25:24.491406Z",
-     "iopub.status.idle": "2025-10-26T15:25:24.496568Z",
-     "shell.execute_reply": "2025-10-26T15:25:24.495726Z"
+     "iopub.execute_input": "2025-10-26T18:19:29.235582Z",
+     "iopub.status.busy": "2025-10-26T18:19:29.235164Z",
+     "iopub.status.idle": "2025-10-26T18:19:29.309625Z",
+     "shell.execute_reply": "2025-10-26T18:19:29.308476Z"
     },
     "papermill": {
-     "duration": 0.010348,
-     "end_time": "2025-10-26T15:25:24.498035",
+     "duration": 0.080558,
+     "end_time": "2025-10-26T18:19:29.311475",
      "exception": false,
-     "start_time": "2025-10-26T15:25:24.487687",
+     "start_time": "2025-10-26T18:19:29.230917",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "drop_cols = ['id', 'accident_risk', 'road_type', 'weather', 'lighting', 'time_of_day']\n",
+    "X = train.drop(columns=drop_cols)\n",
+    "y = train['accident_risk']\n",
+    "X_test = test[X.columns]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "e98b8780",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-10-26T18:19:29.319843Z",
+     "iopub.status.busy": "2025-10-26T18:19:29.319157Z",
+     "iopub.status.idle": "2025-10-26T18:19:29.324831Z",
+     "shell.execute_reply": "2025-10-26T18:19:29.323948Z"
+    },
+    "papermill": {
+     "duration": 0.011883,
+     "end_time": "2025-10-26T18:19:29.326798",
+     "exception": false,
+     "start_time": "2025-10-26T18:19:29.314915",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "# LightGBM parameters\n",
+    "params = {\n",
+    "    'objective': 'regression',\n",
+    "    'metric': 'rmse',\n",
+    "    'n_estimators': 5000,\n",
+    "    'learning_rate': 0.01,\n",
+    "    'max_depth': 8,\n",
+    "    'subsample': 0.8,\n",
+    "    'colsample_bytree': 0.8,\n",
+    "    'reg_lambda': 2.0,\n",
+    "    'reg_alpha': 1.0,\n",
+    "    'random_state': 42,\n",
+    "    'verbose': -1\n",
+    "}"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "022a7606",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-10-26T18:19:29.334911Z",
+     "iopub.status.busy": "2025-10-26T18:19:29.334618Z",
+     "iopub.status.idle": "2025-10-26T18:19:29.339948Z",
+     "shell.execute_reply": "2025-10-26T18:19:29.339170Z"
+    },
+    "papermill": {
+     "duration": 0.011774,
+     "end_time": "2025-10-26T18:19:29.341871",
+     "exception": false,
+     "start_time": "2025-10-26T18:19:29.330097",
      "status": "completed"
     },
     "tags": []
@@ -285,61 +354,26 @@
    "source": [
     "folds = 5\n",
     "kf = KFold(n_splits=folds, shuffle=True, random_state=42)\n",
-    "test_preds = np.zeros(len(test))\n",
-    "oof = np.zeros(len(train))"
+    "test_preds = np.zeros(len(X_test))\n",
+    "oof = np.zeros(len(X))"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 8,
-   "id": "3083bca7",
+   "execution_count": 10,
+   "id": "ca5425c1",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-10-26T15:25:24.505096Z",
-     "iopub.status.busy": "2025-10-26T15:25:24.504729Z",
-     "iopub.status.idle": "2025-10-26T15:25:24.509961Z",
-     "shell.execute_reply": "2025-10-26T15:25:24.508913Z"
+     "iopub.execute_input": "2025-10-26T18:19:29.350312Z",
+     "iopub.status.busy": "2025-10-26T18:19:29.349958Z",
+     "iopub.status.idle": "2025-10-26T18:34:00.833494Z",
+     "shell.execute_reply": "2025-10-26T18:34:00.832483Z"
     },
     "papermill": {
-     "duration": 0.01048,
-     "end_time": "2025-10-26T15:25:24.511517",
+     "duration": 871.490317,
+     "end_time": "2025-10-26T18:34:00.835590",
      "exception": false,
-     "start_time": "2025-10-26T15:25:24.501037",
-     "status": "completed"
-    },
-    "tags": []
-   },
-   "outputs": [],
-   "source": [
-    "params = {\n",
-    "    'objective': 'reg:squarederror',\n",
-    "    'eval_metric': 'rmse',\n",
-    "    'n_estimators': 3000,\n",
-    "    'learning_rate': 0.03,\n",
-    "    'max_depth': 6,\n",
-    "    'subsample': 0.7,\n",
-    "    'colsample_bytree': 0.7,\n",
-    "    'random_state': 42,\n",
-    "    'tree_method': 'hist'\n",
-    "}"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 9,
-   "id": "02f0528b",
-   "metadata": {
-    "execution": {
-     "iopub.execute_input": "2025-10-26T15:25:24.518849Z",
-     "iopub.status.busy": "2025-10-26T15:25:24.518481Z",
-     "iopub.status.idle": "2025-10-26T15:28:08.745325Z",
-     "shell.execute_reply": "2025-10-26T15:28:08.743875Z"
-    },
-    "papermill": {
-     "duration": 164.232704,
-     "end_time": "2025-10-26T15:28:08.747264",
-     "exception": false,
-     "start_time": "2025-10-26T15:25:24.514560",
+     "start_time": "2025-10-26T18:19:29.345273",
      "status": "completed"
     },
     "tags": []
@@ -350,133 +384,25 @@
      "output_type": "stream",
      "text": [
       "Fold 1\n",
-      "[0]\tvalidation_0-rmse:0.16327\n"
-     ]
-    },
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "/usr/local/lib/python3.11/dist-packages/xgboost/sklearn.py:889: UserWarning: `early_stopping_rounds` in `fit` method is deprecated for better compatibility with scikit-learn, use `early_stopping_rounds` in constructor or`set_params` instead.\n",
-      "  warnings.warn(\n"
-     ]
-    },
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "[100]\tvalidation_0-rmse:0.06057\n",
-      "[200]\tvalidation_0-rmse:0.05649\n",
-      "[300]\tvalidation_0-rmse:0.05631\n",
-      "[400]\tvalidation_0-rmse:0.05627\n",
-      "[500]\tvalidation_0-rmse:0.05626\n",
-      "[600]\tvalidation_0-rmse:0.05625\n",
-      "[700]\tvalidation_0-rmse:0.05624\n",
-      "[800]\tvalidation_0-rmse:0.05624\n",
-      "[888]\tvalidation_0-rmse:0.05624\n",
+      "Training until validation scores don't improve for 200 rounds\n",
+      "Did not meet early stopping. Best iteration is:\n",
+      "[4986]\tvalid_0's rmse: 0.0562436\n",
       "Fold 2\n",
-      "[0]\tvalidation_0-rmse:0.16355\n"
-     ]
-    },
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "/usr/local/lib/python3.11/dist-packages/xgboost/sklearn.py:889: UserWarning: `early_stopping_rounds` in `fit` method is deprecated for better compatibility with scikit-learn, use `early_stopping_rounds` in constructor or`set_params` instead.\n",
-      "  warnings.warn(\n"
-     ]
-    },
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "[100]\tvalidation_0-rmse:0.06046\n",
-      "[200]\tvalidation_0-rmse:0.05635\n",
-      "[300]\tvalidation_0-rmse:0.05617\n",
-      "[400]\tvalidation_0-rmse:0.05614\n",
-      "[500]\tvalidation_0-rmse:0.05613\n",
-      "[600]\tvalidation_0-rmse:0.05612\n",
-      "[700]\tvalidation_0-rmse:0.05612\n",
-      "[800]\tvalidation_0-rmse:0.05612\n",
-      "[872]\tvalidation_0-rmse:0.05612\n",
+      "Training until validation scores don't improve for 200 rounds\n",
+      "Did not meet early stopping. Best iteration is:\n",
+      "[4992]\tvalid_0's rmse: 0.0561203\n",
       "Fold 3\n",
-      "[0]\tvalidation_0-rmse:0.16397\n"
-     ]
-    },
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "/usr/local/lib/python3.11/dist-packages/xgboost/sklearn.py:889: UserWarning: `early_stopping_rounds` in `fit` method is deprecated for better compatibility with scikit-learn, use `early_stopping_rounds` in constructor or`set_params` instead.\n",
-      "  warnings.warn(\n"
-     ]
-    },
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "[100]\tvalidation_0-rmse:0.06053\n",
-      "[200]\tvalidation_0-rmse:0.05640\n",
-      "[300]\tvalidation_0-rmse:0.05621\n",
-      "[400]\tvalidation_0-rmse:0.05617\n",
-      "[500]\tvalidation_0-rmse:0.05616\n",
-      "[600]\tvalidation_0-rmse:0.05615\n",
-      "[700]\tvalidation_0-rmse:0.05615\n",
-      "[800]\tvalidation_0-rmse:0.05615\n",
-      "[900]\tvalidation_0-rmse:0.05615\n",
-      "[984]\tvalidation_0-rmse:0.05615\n",
+      "Training until validation scores don't improve for 200 rounds\n",
+      "Did not meet early stopping. Best iteration is:\n",
+      "[4974]\tvalid_0's rmse: 0.0561529\n",
       "Fold 4\n",
-      "[0]\tvalidation_0-rmse:0.16310\n"
-     ]
-    },
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "/usr/local/lib/python3.11/dist-packages/xgboost/sklearn.py:889: UserWarning: `early_stopping_rounds` in `fit` method is deprecated for better compatibility with scikit-learn, use `early_stopping_rounds` in constructor or`set_params` instead.\n",
-      "  warnings.warn(\n"
-     ]
-    },
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "[100]\tvalidation_0-rmse:0.06022\n",
-      "[200]\tvalidation_0-rmse:0.05622\n",
-      "[300]\tvalidation_0-rmse:0.05606\n",
-      "[400]\tvalidation_0-rmse:0.05603\n",
-      "[500]\tvalidation_0-rmse:0.05602\n",
-      "[600]\tvalidation_0-rmse:0.05602\n",
-      "[700]\tvalidation_0-rmse:0.05601\n",
-      "[800]\tvalidation_0-rmse:0.05601\n",
-      "[861]\tvalidation_0-rmse:0.05601\n",
+      "Training until validation scores don't improve for 200 rounds\n",
+      "Early stopping, best iteration is:\n",
+      "[4448]\tvalid_0's rmse: 0.0560225\n",
       "Fold 5\n",
-      "[0]\tvalidation_0-rmse:0.16365\n"
-     ]
-    },
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "/usr/local/lib/python3.11/dist-packages/xgboost/sklearn.py:889: UserWarning: `early_stopping_rounds` in `fit` method is deprecated for better compatibility with scikit-learn, use `early_stopping_rounds` in constructor or`set_params` instead.\n",
-      "  warnings.warn(\n"
-     ]
-    },
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "[100]\tvalidation_0-rmse:0.06034\n",
-      "[200]\tvalidation_0-rmse:0.05619\n",
-      "[300]\tvalidation_0-rmse:0.05600\n",
-      "[400]\tvalidation_0-rmse:0.05596\n",
-      "[500]\tvalidation_0-rmse:0.05595\n",
-      "[600]\tvalidation_0-rmse:0.05594\n",
-      "[700]\tvalidation_0-rmse:0.05594\n",
-      "[800]\tvalidation_0-rmse:0.05593\n",
-      "[900]\tvalidation_0-rmse:0.05593\n",
-      "[970]\tvalidation_0-rmse:0.05593\n",
-      "CV RMSE: 0.056088965247634355\n"
+      "Training until validation scores don't improve for 200 rounds\n",
+      "Did not meet early stopping. Best iteration is:\n",
+      "[4999]\tvalid_0's rmse: 0.0559781\n"
      ]
     }
    ],
@@ -485,130 +411,88 @@
     "    print(f\"Fold {fold+1}\")\n",
     "    X_train, y_train = X.iloc[train_idx], y.iloc[train_idx]\n",
     "    X_val, y_val = X.iloc[val_idx], y.iloc[val_idx]\n",
-    "    \n",
-    "    model = xgb.XGBRegressor(**params)\n",
-    "    model.fit(X_train, y_train,\n",
-    "              eval_set=[(X_val, y_val)],\n",
-    "              early_stopping_rounds=100,\n",
-    "              verbose=100)\n",
-    "    \n",
+    "    model = lgb.LGBMRegressor(**params)\n",
+    "    model.fit(\n",
+    "        X_train, y_train,\n",
+    "        eval_set=[(X_val, y_val)],\n",
+    "        callbacks=[lgb.early_stopping(stopping_rounds=200)]\n",
+    "    )\n",
     "    oof[val_idx] = model.predict(X_val)\n",
-    "    test_preds += model.predict(X_test) / folds\n",
-    "\n",
-    "print(\"CV RMSE:\", np.sqrt(mean_squared_error(y, oof)))"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "id": "ec609a30",
-   "metadata": {
-    "papermill": {
-     "duration": 0.005964,
-     "end_time": "2025-10-26T15:28:08.760402",
-     "exception": false,
-     "start_time": "2025-10-26T15:28:08.754438",
-     "status": "completed"
-    },
-    "tags": []
-   },
-   "source": [
-    "Final test predictions"
+    "    test_preds += model.predict(X_test) / folds"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 10,
-   "id": "64f97180",
+   "execution_count": 11,
+   "id": "47176ff7",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-10-26T15:28:08.773255Z",
-     "iopub.status.busy": "2025-10-26T15:28:08.772931Z",
-     "iopub.status.idle": "2025-10-26T15:28:09.192050Z",
-     "shell.execute_reply": "2025-10-26T15:28:09.191129Z"
+     "iopub.execute_input": "2025-10-26T18:34:00.846460Z",
+     "iopub.status.busy": "2025-10-26T18:34:00.846035Z",
+     "iopub.status.idle": "2025-10-26T18:34:00.855327Z",
+     "shell.execute_reply": "2025-10-26T18:34:00.854405Z"
     },
     "papermill": {
-     "duration": 0.427374,
-     "end_time": "2025-10-26T15:28:09.193668",
+     "duration": 0.016173,
+     "end_time": "2025-10-26T18:34:00.856864",
      "exception": false,
-     "start_time": "2025-10-26T15:28:08.766294",
+     "start_time": "2025-10-26T18:34:00.840691",
      "status": "completed"
     },
     "tags": []
    },
    "outputs": [
     {
-     "data": {
-      "text/html": [
-       "<div>\n",
-       "<style scoped>\n",
-       "    .dataframe tbody tr th:only-of-type {\n",
-       "        vertical-align: middle;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe tbody tr th {\n",
-       "        vertical-align: top;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe thead th {\n",
-       "        text-align: right;\n",
-       "    }\n",
-       "</style>\n",
-       "<table border=\"1\" class=\"dataframe\">\n",
-       "  <thead>\n",
-       "    <tr style=\"text-align: right;\">\n",
-       "      <th></th>\n",
-       "      <th>id</th>\n",
-       "      <th>accident_risk</th>\n",
-       "    </tr>\n",
-       "  </thead>\n",
-       "  <tbody>\n",
-       "    <tr>\n",
-       "      <th>0</th>\n",
-       "      <td>517754</td>\n",
-       "      <td>0.289297</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>1</th>\n",
-       "      <td>517755</td>\n",
-       "      <td>0.122076</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>2</th>\n",
-       "      <td>517756</td>\n",
-       "      <td>0.186409</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>3</th>\n",
-       "      <td>517757</td>\n",
-       "      <td>0.318443</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>4</th>\n",
-       "      <td>517758</td>\n",
-       "      <td>0.397159</td>\n",
-       "    </tr>\n",
-       "  </tbody>\n",
-       "</table>\n",
-       "</div>"
-      ],
-      "text/plain": [
-       "       id  accident_risk\n",
-       "0  517754       0.289297\n",
-       "1  517755       0.122076\n",
-       "2  517756       0.186409\n",
-       "3  517757       0.318443\n",
-       "4  517758       0.397159"
-      ]
-     },
-     "execution_count": 10,
-     "metadata": {},
-     "output_type": "execute_result"
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "CV RMSE: 0.05610358890319295\n"
+     ]
     }
    ],
    "source": [
+    "print(\"CV RMSE:\", np.sqrt(mean_squared_error(y, oof)))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "46e9499d",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-10-26T18:34:00.866403Z",
+     "iopub.status.busy": "2025-10-26T18:34:00.866028Z",
+     "iopub.status.idle": "2025-10-26T18:34:01.284861Z",
+     "shell.execute_reply": "2025-10-26T18:34:01.283396Z"
+    },
+    "papermill": {
+     "duration": 0.426028,
+     "end_time": "2025-10-26T18:34:01.287017",
+     "exception": false,
+     "start_time": "2025-10-26T18:34:00.860989",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "       id  accident_risk\n",
+      "0  517754       0.295025\n",
+      "1  517755       0.122714\n",
+      "2  517756       0.186791\n",
+      "3  517757       0.317089\n",
+      "4  517758       0.392478\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Prepare submission file\n",
     "submission['accident_risk'] = np.clip(test_preds, 0, 1)\n",
     "submission.to_csv('submission.csv', index=False)\n",
-    "submission.head()"
+    "print(submission.head())"
    ]
   }
  ],
@@ -648,14 +532,14 @@
   },
   "papermill": {
    "default_parameters": {},
-   "duration": 177.542222,
-   "end_time": "2025-10-26T15:28:09.920656",
+   "duration": 892.564768,
+   "end_time": "2025-10-26T18:34:02.415555",
    "environment_variables": {},
    "exception": null,
    "input_path": "__notebook__.ipynb",
    "output_path": "__notebook__.ipynb",
    "parameters": {},
-   "start_time": "2025-10-26T15:25:12.378434",
+   "start_time": "2025-10-26T18:19:09.850787",
    "version": "2.6.0"
   }
  },
