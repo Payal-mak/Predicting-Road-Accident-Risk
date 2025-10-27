@@ -3,21 +3,21 @@
   {
    "cell_type": "code",
    "execution_count": 1,
-   "id": "184546ff",
+   "id": "79bf03a3",
    "metadata": {
     "_cell_guid": "b1076dfc-b9ad-4769-8c92-a6c4dae69d19",
     "_uuid": "8f2839f25d086af736a60e9eeb907d3b93b6e0e5",
     "execution": {
-     "iopub.execute_input": "2025-10-26T19:27:49.560079Z",
-     "iopub.status.busy": "2025-10-26T19:27:49.559261Z",
-     "iopub.status.idle": "2025-10-26T19:27:51.934754Z",
-     "shell.execute_reply": "2025-10-26T19:27:51.933313Z"
+     "iopub.execute_input": "2025-10-27T05:56:26.525971Z",
+     "iopub.status.busy": "2025-10-27T05:56:26.525650Z",
+     "iopub.status.idle": "2025-10-27T05:56:28.405813Z",
+     "shell.execute_reply": "2025-10-27T05:56:28.404579Z"
     },
     "papermill": {
-     "duration": 2.383253,
-     "end_time": "2025-10-26T19:27:51.936535",
+     "duration": 1.888998,
+     "end_time": "2025-10-27T05:56:28.407731",
      "exception": false,
-     "start_time": "2025-10-26T19:27:49.553282",
+     "start_time": "2025-10-27T05:56:26.518733",
      "status": "completed"
     },
     "tags": []
@@ -56,19 +56,19 @@
   {
    "cell_type": "code",
    "execution_count": 2,
-   "id": "b66bd00e",
+   "id": "a4eb13d9",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-10-26T19:27:51.945825Z",
-     "iopub.status.busy": "2025-10-26T19:27:51.945429Z",
-     "iopub.status.idle": "2025-10-26T19:28:02.287032Z",
-     "shell.execute_reply": "2025-10-26T19:28:02.285923Z"
+     "iopub.execute_input": "2025-10-27T05:56:28.418589Z",
+     "iopub.status.busy": "2025-10-27T05:56:28.418144Z",
+     "iopub.status.idle": "2025-10-27T05:56:37.526880Z",
+     "shell.execute_reply": "2025-10-27T05:56:37.525666Z"
     },
     "papermill": {
-     "duration": 10.348098,
-     "end_time": "2025-10-26T19:28:02.288802",
+     "duration": 9.116271,
+     "end_time": "2025-10-27T05:56:37.528776",
      "exception": false,
-     "start_time": "2025-10-26T19:27:51.940704",
+     "start_time": "2025-10-27T05:56:28.412505",
      "status": "completed"
     },
     "tags": []
@@ -79,19 +79,21 @@
     "import numpy as np\n",
     "from sklearn.model_selection import KFold\n",
     "from sklearn.metrics import mean_squared_error\n",
+    "from sklearn.linear_model import RidgeCV\n",
     "import xgboost as xgb\n",
-    "import lightgbm as lgb"
+    "import lightgbm as lgb\n",
+    "from catboost import CatBoostRegressor, Pool"
    ]
   },
   {
    "cell_type": "markdown",
-   "id": "4a44b957",
+   "id": "3f92c4cb",
    "metadata": {
     "papermill": {
-     "duration": 0.003511,
-     "end_time": "2025-10-26T19:28:02.296430",
+     "duration": 0.00363,
+     "end_time": "2025-10-27T05:56:37.536636",
      "exception": false,
-     "start_time": "2025-10-26T19:28:02.292919",
+     "start_time": "2025-10-27T05:56:37.533006",
      "status": "completed"
     },
     "tags": []
@@ -103,19 +105,19 @@
   {
    "cell_type": "code",
    "execution_count": 3,
-   "id": "3cadac4d",
+   "id": "8ba86673",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-10-26T19:28:02.305322Z",
-     "iopub.status.busy": "2025-10-26T19:28:02.304706Z",
-     "iopub.status.idle": "2025-10-26T19:28:04.271425Z",
-     "shell.execute_reply": "2025-10-26T19:28:04.270488Z"
+     "iopub.execute_input": "2025-10-27T05:56:37.546194Z",
+     "iopub.status.busy": "2025-10-27T05:56:37.545412Z",
+     "iopub.status.idle": "2025-10-27T05:56:39.272875Z",
+     "shell.execute_reply": "2025-10-27T05:56:39.271521Z"
     },
     "papermill": {
-     "duration": 1.973204,
-     "end_time": "2025-10-26T19:28:04.273237",
+     "duration": 1.734501,
+     "end_time": "2025-10-27T05:56:39.274927",
      "exception": false,
-     "start_time": "2025-10-26T19:28:02.300033",
+     "start_time": "2025-10-27T05:56:37.540426",
      "status": "completed"
     },
     "tags": []
@@ -129,13 +131,13 @@
   },
   {
    "cell_type": "markdown",
-   "id": "fcc829bf",
+   "id": "d40c61f4",
    "metadata": {
     "papermill": {
-     "duration": 0.003485,
-     "end_time": "2025-10-26T19:28:04.280984",
+     "duration": 0.004098,
+     "end_time": "2025-10-27T05:56:39.283598",
      "exception": false,
-     "start_time": "2025-10-26T19:28:04.277499",
+     "start_time": "2025-10-27T05:56:39.279500",
      "status": "completed"
     },
     "tags": []
@@ -147,19 +149,19 @@
   {
    "cell_type": "code",
    "execution_count": 4,
-   "id": "94524fed",
+   "id": "8d054577",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-10-26T19:28:04.290330Z",
-     "iopub.status.busy": "2025-10-26T19:28:04.290040Z",
-     "iopub.status.idle": "2025-10-26T19:28:04.324833Z",
-     "shell.execute_reply": "2025-10-26T19:28:04.323944Z"
+     "iopub.execute_input": "2025-10-27T05:56:39.293574Z",
+     "iopub.status.busy": "2025-10-27T05:56:39.293123Z",
+     "iopub.status.idle": "2025-10-27T05:56:39.366903Z",
+     "shell.execute_reply": "2025-10-27T05:56:39.365715Z"
     },
     "papermill": {
-     "duration": 0.041022,
-     "end_time": "2025-10-26T19:28:04.326563",
+     "duration": 0.081113,
+     "end_time": "2025-10-27T05:56:39.368930",
      "exception": false,
-     "start_time": "2025-10-26T19:28:04.285541",
+     "start_time": "2025-10-27T05:56:39.287817",
      "status": "completed"
     },
     "tags": []
@@ -169,31 +171,7 @@
     "train['curv_speed'] = train['curvature'] * train['speed_limit']\n",
     "test['curv_speed'] = test['curvature'] * test['speed_limit']\n",
     "train['lane_speed'] = train['num_lanes'] * train['speed_limit']\n",
-    "test['lane_speed'] = test['num_lanes'] * test['speed_limit']"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 5,
-   "id": "fbcc4a7a",
-   "metadata": {
-    "execution": {
-     "iopub.execute_input": "2025-10-26T19:28:04.335889Z",
-     "iopub.status.busy": "2025-10-26T19:28:04.335075Z",
-     "iopub.status.idle": "2025-10-26T19:28:04.364981Z",
-     "shell.execute_reply": "2025-10-26T19:28:04.363934Z"
-    },
-    "papermill": {
-     "duration": 0.036449,
-     "end_time": "2025-10-26T19:28:04.366835",
-     "exception": false,
-     "start_time": "2025-10-26T19:28:04.330386",
-     "status": "completed"
-    },
-    "tags": []
-   },
-   "outputs": [],
-   "source": [
+    "test['lane_speed'] = test['num_lanes'] * test['speed_limit']\n",
     "for col in ['curvature', 'num_reported_accidents']:\n",
     "    train[col + '_log'] = np.log1p(train[col])\n",
     "    test[col + '_log'] = np.log1p(test[col])"
@@ -201,13 +179,13 @@
   },
   {
    "cell_type": "markdown",
-   "id": "cc2fe24c",
+   "id": "25d8ff4f",
    "metadata": {
     "papermill": {
-     "duration": 0.004736,
-     "end_time": "2025-10-26T19:28:04.376240",
+     "duration": 0.004527,
+     "end_time": "2025-10-27T05:56:39.378749",
      "exception": false,
-     "start_time": "2025-10-26T19:28:04.371504",
+     "start_time": "2025-10-27T05:56:39.374222",
      "status": "completed"
     },
     "tags": []
@@ -218,20 +196,20 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 6,
-   "id": "ba95e66b",
+   "execution_count": 5,
+   "id": "671aba7a",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-10-26T19:28:04.386214Z",
-     "iopub.status.busy": "2025-10-26T19:28:04.385871Z",
-     "iopub.status.idle": "2025-10-26T19:28:04.773039Z",
-     "shell.execute_reply": "2025-10-26T19:28:04.771953Z"
+     "iopub.execute_input": "2025-10-27T05:56:39.387849Z",
+     "iopub.status.busy": "2025-10-27T05:56:39.387545Z",
+     "iopub.status.idle": "2025-10-27T05:56:39.740732Z",
+     "shell.execute_reply": "2025-10-27T05:56:39.739796Z"
     },
     "papermill": {
-     "duration": 0.393736,
-     "end_time": "2025-10-26T19:28:04.774915",
+     "duration": 0.359858,
+     "end_time": "2025-10-27T05:56:39.742654",
      "exception": false,
-     "start_time": "2025-10-26T19:28:04.381179",
+     "start_time": "2025-10-27T05:56:39.382796",
      "status": "completed"
     },
     "tags": []
@@ -250,13 +228,13 @@
   },
   {
    "cell_type": "markdown",
-   "id": "48cc2697",
+   "id": "960c372d",
    "metadata": {
     "papermill": {
-     "duration": 0.003651,
-     "end_time": "2025-10-26T19:28:04.786727",
+     "duration": 0.003513,
+     "end_time": "2025-10-27T05:56:39.750065",
      "exception": false,
-     "start_time": "2025-10-26T19:28:04.783076",
+     "start_time": "2025-10-27T05:56:39.746552",
      "status": "completed"
     },
     "tags": []
@@ -267,20 +245,20 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 7,
-   "id": "e86c9ea1",
+   "execution_count": 6,
+   "id": "6746afe1",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-10-26T19:28:04.796236Z",
-     "iopub.status.busy": "2025-10-26T19:28:04.795883Z",
-     "iopub.status.idle": "2025-10-26T19:28:04.871796Z",
-     "shell.execute_reply": "2025-10-26T19:28:04.870761Z"
+     "iopub.execute_input": "2025-10-27T05:56:39.758719Z",
+     "iopub.status.busy": "2025-10-27T05:56:39.758407Z",
+     "iopub.status.idle": "2025-10-27T05:56:39.834118Z",
+     "shell.execute_reply": "2025-10-27T05:56:39.833121Z"
     },
     "papermill": {
-     "duration": 0.082765,
-     "end_time": "2025-10-26T19:28:04.873657",
+     "duration": 0.08237,
+     "end_time": "2025-10-27T05:56:39.836199",
      "exception": false,
-     "start_time": "2025-10-26T19:28:04.790892",
+     "start_time": "2025-10-27T05:56:39.753829",
      "status": "completed"
     },
     "tags": []
@@ -295,13 +273,13 @@
   },
   {
    "cell_type": "markdown",
-   "id": "8ced10a7",
+   "id": "60a5c5c3",
    "metadata": {
     "papermill": {
-     "duration": 0.003422,
-     "end_time": "2025-10-26T19:28:04.880826",
+     "duration": 0.003984,
+     "end_time": "2025-10-27T05:56:39.844532",
      "exception": false,
-     "start_time": "2025-10-26T19:28:04.877404",
+     "start_time": "2025-10-27T05:56:39.840548",
      "status": "completed"
     },
     "tags": []
@@ -312,20 +290,20 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 8,
-   "id": "adee0d53",
+   "execution_count": 7,
+   "id": "db4fc512",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-10-26T19:28:04.889543Z",
-     "iopub.status.busy": "2025-10-26T19:28:04.889187Z",
-     "iopub.status.idle": "2025-10-26T19:28:04.895147Z",
-     "shell.execute_reply": "2025-10-26T19:28:04.894311Z"
+     "iopub.execute_input": "2025-10-27T05:56:39.854259Z",
+     "iopub.status.busy": "2025-10-27T05:56:39.853896Z",
+     "iopub.status.idle": "2025-10-27T05:56:39.858896Z",
+     "shell.execute_reply": "2025-10-27T05:56:39.857732Z"
     },
     "papermill": {
-     "duration": 0.012197,
-     "end_time": "2025-10-26T19:28:04.896731",
+     "duration": 0.012468,
+     "end_time": "2025-10-27T05:56:39.861169",
      "exception": false,
-     "start_time": "2025-10-26T19:28:04.884534",
+     "start_time": "2025-10-27T05:56:39.848701",
      "status": "completed"
     },
     "tags": []
@@ -333,27 +311,25 @@
    "outputs": [],
    "source": [
     "n_splits = 5\n",
-    "kf = KFold(n_splits=n_splits, shuffle=True, random_state=42)\n",
-    "xgb_oof, xgb_preds = np.zeros(len(X)), np.zeros(len(X_test))\n",
-    "lgb_oof, lgb_preds = np.zeros(len(X)), np.zeros(len(X_test))"
+    "kf = KFold(n_splits=n_splits, shuffle=True, random_state=42)"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 9,
-   "id": "d6eedecc",
+   "execution_count": 8,
+   "id": "b60a91aa",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-10-26T19:28:04.905232Z",
-     "iopub.status.busy": "2025-10-26T19:28:04.904918Z",
-     "iopub.status.idle": "2025-10-26T19:28:04.909797Z",
-     "shell.execute_reply": "2025-10-26T19:28:04.908793Z"
+     "iopub.execute_input": "2025-10-27T05:56:39.872759Z",
+     "iopub.status.busy": "2025-10-27T05:56:39.872424Z",
+     "iopub.status.idle": "2025-10-27T05:56:39.877810Z",
+     "shell.execute_reply": "2025-10-27T05:56:39.876828Z"
     },
     "papermill": {
-     "duration": 0.010959,
-     "end_time": "2025-10-26T19:28:04.911469",
+     "duration": 0.013335,
+     "end_time": "2025-10-27T05:56:39.879675",
      "exception": false,
-     "start_time": "2025-10-26T19:28:04.900510",
+     "start_time": "2025-10-27T05:56:39.866340",
      "status": "completed"
     },
     "tags": []
@@ -364,33 +340,35 @@
     "xgb_params = {\n",
     "    'objective': 'reg:squarederror',\n",
     "    'eval_metric': 'rmse',\n",
-    "    'n_estimators': 5000,\n",
+    "    'n_estimators': 3000,\n",
     "    'learning_rate': 0.01,\n",
-    "    'max_depth': 8,\n",
-    "    'subsample': 0.8,\n",
-    "    'colsample_bytree': 0.8,\n",
+    "    'max_depth': 7,\n",
+    "    'subsample': 0.77,\n",
+    "    'colsample_bytree': 0.78,\n",
     "    'min_child_weight': 5,\n",
     "    'random_state': 42,\n",
-    "    'tree_method': 'hist'\n",
+    "    'tree_method': 'hist',\n",
+    "    'enable_categorical': True,\n",
+    "    'early_stopping_rounds': 200\n",
     "}"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 10,
-   "id": "064634e8",
+   "execution_count": 9,
+   "id": "0225878b",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-10-26T19:28:04.920214Z",
-     "iopub.status.busy": "2025-10-26T19:28:04.919812Z",
-     "iopub.status.idle": "2025-10-26T19:28:04.925472Z",
-     "shell.execute_reply": "2025-10-26T19:28:04.924264Z"
+     "iopub.execute_input": "2025-10-27T05:56:39.890067Z",
+     "iopub.status.busy": "2025-10-27T05:56:39.889753Z",
+     "iopub.status.idle": "2025-10-27T05:56:39.895712Z",
+     "shell.execute_reply": "2025-10-27T05:56:39.894501Z"
     },
     "papermill": {
-     "duration": 0.012029,
-     "end_time": "2025-10-26T19:28:04.927164",
+     "duration": 0.013157,
+     "end_time": "2025-10-27T05:56:39.897430",
      "exception": false,
-     "start_time": "2025-10-26T19:28:04.915135",
+     "start_time": "2025-10-27T05:56:39.884273",
      "status": "completed"
     },
     "tags": []
@@ -401,9 +379,9 @@
     "lgb_params = {\n",
     "    'objective': 'regression',\n",
     "    'metric': 'rmse',\n",
-    "    'n_estimators': 5000,\n",
-    "    'learning_rate': 0.01,\n",
-    "    'max_depth': 8,\n",
+    "    'n_estimators': 3000,\n",
+    "    'learning_rate': 0.015,\n",
+    "    'max_depth': 7,\n",
     "    'subsample': 0.8,\n",
     "    'colsample_bytree': 0.8,\n",
     "    'reg_lambda': 2.0,\n",
@@ -415,20 +393,80 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 11,
-   "id": "68a54977",
+   "execution_count": 10,
+   "id": "a9d5fed8",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-10-26T19:28:04.935971Z",
-     "iopub.status.busy": "2025-10-26T19:28:04.935653Z",
-     "iopub.status.idle": "2025-10-26T19:46:51.352385Z",
-     "shell.execute_reply": "2025-10-26T19:46:51.351480Z"
+     "iopub.execute_input": "2025-10-27T05:56:39.907489Z",
+     "iopub.status.busy": "2025-10-27T05:56:39.907086Z",
+     "iopub.status.idle": "2025-10-27T05:56:39.912978Z",
+     "shell.execute_reply": "2025-10-27T05:56:39.911917Z"
     },
     "papermill": {
-     "duration": 1126.423383,
-     "end_time": "2025-10-26T19:46:51.354489",
+     "duration": 0.013165,
+     "end_time": "2025-10-27T05:56:39.914777",
      "exception": false,
-     "start_time": "2025-10-26T19:28:04.931106",
+     "start_time": "2025-10-27T05:56:39.901612",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "cat_params = {\n",
+    "    'loss_function': 'RMSE',\n",
+    "    'iterations': 2000,\n",
+    "    'learning_rate': 0.019,\n",
+    "    'depth': 7,\n",
+    "    'random_seed': 42,\n",
+    "    'verbose': False\n",
+    "}"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "925af08b",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-10-27T05:56:39.924502Z",
+     "iopub.status.busy": "2025-10-27T05:56:39.923693Z",
+     "iopub.status.idle": "2025-10-27T05:56:39.931188Z",
+     "shell.execute_reply": "2025-10-27T05:56:39.930084Z"
+    },
+    "papermill": {
+     "duration": 0.014166,
+     "end_time": "2025-10-27T05:56:39.932852",
+     "exception": false,
+     "start_time": "2025-10-27T05:56:39.918686",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "# Out-of-fold and prediction arrays\n",
+    "xgb_oof, xgb_preds = np.zeros(len(X)), np.zeros(len(X_test))\n",
+    "lgb_oof, lgb_preds = np.zeros(len(X)), np.zeros(len(X_test))\n",
+    "cat_oof, cat_preds = np.zeros(len(X)), np.zeros(len(X_test))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "e1fd911f",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-10-27T05:56:39.942026Z",
+     "iopub.status.busy": "2025-10-27T05:56:39.941656Z",
+     "iopub.status.idle": "2025-10-27T06:20:04.859993Z",
+     "shell.execute_reply": "2025-10-27T06:20:04.858598Z"
+    },
+    "papermill": {
+     "duration": 1404.925513,
+     "end_time": "2025-10-27T06:20:04.862299",
+     "exception": false,
+     "start_time": "2025-10-27T05:56:39.936786",
      "status": "completed"
     },
     "tags": []
@@ -441,69 +479,75 @@
       "Fold 1\n",
       "Training until validation scores don't improve for 200 rounds\n",
       "Did not meet early stopping. Best iteration is:\n",
-      "[4986]\tvalid_0's rmse: 0.0562436\n",
+      "[2996]\tvalid_0's rmse: 0.0562534\n",
       "Fold 2\n",
       "Training until validation scores don't improve for 200 rounds\n",
       "Did not meet early stopping. Best iteration is:\n",
-      "[4992]\tvalid_0's rmse: 0.0561203\n",
+      "[3000]\tvalid_0's rmse: 0.0561163\n",
       "Fold 3\n",
       "Training until validation scores don't improve for 200 rounds\n",
       "Did not meet early stopping. Best iteration is:\n",
-      "[4974]\tvalid_0's rmse: 0.0561529\n",
+      "[2990]\tvalid_0's rmse: 0.0561587\n",
       "Fold 4\n",
       "Training until validation scores don't improve for 200 rounds\n",
-      "Early stopping, best iteration is:\n",
-      "[4448]\tvalid_0's rmse: 0.0560225\n",
+      "Did not meet early stopping. Best iteration is:\n",
+      "[2986]\tvalid_0's rmse: 0.0560256\n",
       "Fold 5\n",
       "Training until validation scores don't improve for 200 rounds\n",
       "Did not meet early stopping. Best iteration is:\n",
-      "[4999]\tvalid_0's rmse: 0.0559781\n"
+      "[2996]\tvalid_0's rmse: 0.0559714\n"
      ]
     }
    ],
    "source": [
     "for fold, (train_idx, val_idx) in enumerate(kf.split(X, y)):\n",
     "    print(f\"Fold {fold+1}\")\n",
-    "    X_train, y_train = X.iloc[train_idx], y.iloc[train_idx]\n",
-    "    X_val, y_val = X.iloc[val_idx], y.iloc[val_idx]\n",
+    "\n",
+    "    # Split data\n",
+    "    X_train_, X_val_ = X.iloc[train_idx], X.iloc[val_idx]\n",
+    "    y_train_, y_val_ = y.iloc[train_idx], y.iloc[val_idx]\n",
     "\n",
     "    # XGBoost\n",
-    "    xgb_model = xgb.XGBRegressor(**xgb_params, early_stopping_rounds=200)\n",
-    "    xgb_model.fit(\n",
-    "        X_train, y_train,\n",
-    "        eval_set=[(X_val, y_val)],\n",
-    "        verbose=0\n",
-    "    )\n",
-    "    xgb_oof[val_idx] = xgb_model.predict(X_val)\n",
+    "    xgb_model = xgb.XGBRegressor(**xgb_params)\n",
+    "    xgb_model.fit(X_train_, y_train_,\n",
+    "                  eval_set=[(X_val_, y_val_)],\n",
+    "                  verbose=0)\n",
+    "    xgb_oof[val_idx] = xgb_model.predict(X_val_)\n",
     "    xgb_preds += xgb_model.predict(X_test) / n_splits\n",
     "\n",
     "    # LightGBM\n",
     "    lgb_model = lgb.LGBMRegressor(**lgb_params)\n",
-    "    lgb_model.fit(\n",
-    "        X_train, y_train,\n",
-    "        eval_set=[(X_val, y_val)],\n",
-    "        callbacks=[lgb.early_stopping(stopping_rounds=200)]\n",
-    "    )\n",
-    "    lgb_oof[val_idx] = lgb_model.predict(X_val)\n",
-    "    lgb_preds += lgb_model.predict(X_test) / n_splits\n"
+    "    lgb_model.fit(X_train_, y_train_,\n",
+    "                  eval_set=[(X_val_, y_val_)],\n",
+    "                  callbacks=[lgb.early_stopping(stopping_rounds=200)])\n",
+    "    lgb_oof[val_idx] = lgb_model.predict(X_val_)\n",
+    "    lgb_preds += lgb_model.predict(X_test) / n_splits\n",
+    "\n",
+    "    # CatBoost\n",
+    "    cat_model = CatBoostRegressor(**cat_params)\n",
+    "    cat_model.fit(X_train_, y_train_,\n",
+    "                  eval_set=(X_val_, y_val_),\n",
+    "                  use_best_model=True)\n",
+    "    cat_oof[val_idx] = cat_model.predict(X_val_)\n",
+    "    cat_preds += cat_model.predict(X_test) / n_splits"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 12,
-   "id": "315b2917",
+   "execution_count": 13,
+   "id": "5d1fbde9",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-10-26T19:46:51.367800Z",
-     "iopub.status.busy": "2025-10-26T19:46:51.367482Z",
-     "iopub.status.idle": "2025-10-26T19:46:51.381878Z",
-     "shell.execute_reply": "2025-10-26T19:46:51.380356Z"
+     "iopub.execute_input": "2025-10-27T06:20:04.874395Z",
+     "iopub.status.busy": "2025-10-27T06:20:04.873904Z",
+     "iopub.status.idle": "2025-10-27T06:20:04.892926Z",
+     "shell.execute_reply": "2025-10-27T06:20:04.891711Z"
     },
     "papermill": {
-     "duration": 0.024103,
-     "end_time": "2025-10-26T19:46:51.384427",
+     "duration": 0.027236,
+     "end_time": "2025-10-27T06:20:04.894871",
      "exception": false,
-     "start_time": "2025-10-26T19:46:51.360324",
+     "start_time": "2025-10-27T06:20:04.867635",
      "status": "completed"
     },
     "tags": []
@@ -513,32 +557,97 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "XGBoost CV RMSE: 0.05601735838619719\n",
-      "LightGBM CV RMSE: 0.05610358890319295\n"
+      "XGBoost CV RMSE: 0.05602724553971516\n",
+      "LightGBM CV RMSE: 0.0561051537034398\n",
+      "CatBoost CV RMSE: 0.056120061841350176\n"
      ]
     }
    ],
    "source": [
     "print(\"XGBoost CV RMSE:\", np.sqrt(mean_squared_error(y, xgb_oof)))\n",
-    "print(\"LightGBM CV RMSE:\", np.sqrt(mean_squared_error(y, lgb_oof)))"
+    "print(\"LightGBM CV RMSE:\", np.sqrt(mean_squared_error(y, lgb_oof)))\n",
+    "print(\"CatBoost CV RMSE:\", np.sqrt(mean_squared_error(y, cat_oof)))"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 13,
-   "id": "b4904f7c",
+   "execution_count": 14,
+   "id": "3ae31d84",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-10-26T19:46:51.398106Z",
-     "iopub.status.busy": "2025-10-26T19:46:51.397465Z",
-     "iopub.status.idle": "2025-10-26T19:46:51.819123Z",
-     "shell.execute_reply": "2025-10-26T19:46:51.817940Z"
+     "iopub.execute_input": "2025-10-27T06:20:04.908539Z",
+     "iopub.status.busy": "2025-10-27T06:20:04.907945Z",
+     "iopub.status.idle": "2025-10-27T06:20:05.753446Z",
+     "shell.execute_reply": "2025-10-27T06:20:05.752188Z"
     },
     "papermill": {
-     "duration": 0.430267,
-     "end_time": "2025-10-26T19:46:51.820918",
+     "duration": 0.855038,
+     "end_time": "2025-10-27T06:20:05.756006",
      "exception": false,
-     "start_time": "2025-10-26T19:46:51.390651",
+     "start_time": "2025-10-27T06:20:04.900968",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "# Stacking (meta-model)\n",
+    "meta_features_train = np.vstack([xgb_oof, lgb_oof, cat_oof]).T\n",
+    "meta_features_test = np.vstack([xgb_preds, lgb_preds, cat_preds]).T\n",
+    "meta_model = RidgeCV(alphas=[0.1, 1.0, 10.0], cv=5)\n",
+    "meta_model.fit(meta_features_train, y)\n",
+    "stacked_preds = meta_model.predict(meta_features_test)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "aa35ea3f",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-10-27T06:20:05.768373Z",
+     "iopub.status.busy": "2025-10-27T06:20:05.767992Z",
+     "iopub.status.idle": "2025-10-27T06:20:05.781705Z",
+     "shell.execute_reply": "2025-10-27T06:20:05.780440Z"
+    },
+    "papermill": {
+     "duration": 0.021764,
+     "end_time": "2025-10-27T06:20:05.783469",
+     "exception": false,
+     "start_time": "2025-10-27T06:20:05.761705",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "RidgeCV Stacking RMSE (train): 0.05602454568434997\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(f\"RidgeCV Stacking RMSE (train): {np.sqrt(mean_squared_error(y, meta_model.predict(meta_features_train)))}\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "id": "6af50c66",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-10-27T06:20:05.797573Z",
+     "iopub.status.busy": "2025-10-27T06:20:05.797224Z",
+     "iopub.status.idle": "2025-10-27T06:20:06.208259Z",
+     "shell.execute_reply": "2025-10-27T06:20:06.207183Z"
+    },
+    "papermill": {
+     "duration": 0.420159,
+     "end_time": "2025-10-27T06:20:06.210087",
+     "exception": false,
+     "start_time": "2025-10-27T06:20:05.789928",
      "status": "completed"
     },
     "tags": []
@@ -549,47 +658,45 @@
      "output_type": "stream",
      "text": [
       "       id  accident_risk\n",
-      "0  517754       0.295466\n",
-      "1  517755       0.123538\n",
-      "2  517756       0.184731\n",
-      "3  517757       0.315514\n",
-      "4  517758       0.397310\n"
+      "0  517754       0.295748\n",
+      "1  517755       0.123895\n",
+      "2  517756       0.183231\n",
+      "3  517757       0.315425\n",
+      "4  517758       0.397960\n"
      ]
     }
    ],
    "source": [
-    "blended_preds = (xgb_preds + lgb_preds) / 2\n",
-    "submission['accident_risk'] = np.clip(blended_preds, 0, 1)\n",
+    "# Submission (stacked)\n",
+    "submission['accident_risk'] = np.clip(stacked_preds, 0, 1)\n",
     "submission.to_csv('submission.csv', index=False)\n",
     "print(submission.head())"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 14,
-   "id": "eb05af9e",
+   "execution_count": 17,
+   "id": "fc7b9306",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-10-26T19:46:51.831430Z",
-     "iopub.status.busy": "2025-10-26T19:46:51.831066Z",
-     "iopub.status.idle": "2025-10-26T19:46:51.835170Z",
-     "shell.execute_reply": "2025-10-26T19:46:51.834269Z"
+     "iopub.execute_input": "2025-10-27T06:20:06.221910Z",
+     "iopub.status.busy": "2025-10-27T06:20:06.221565Z",
+     "iopub.status.idle": "2025-10-27T06:20:06.226532Z",
+     "shell.execute_reply": "2025-10-27T06:20:06.225407Z"
     },
     "papermill": {
-     "duration": 0.011147,
-     "end_time": "2025-10-26T19:46:51.836798",
+     "duration": 0.013111,
+     "end_time": "2025-10-27T06:20:06.228460",
      "exception": false,
-     "start_time": "2025-10-26T19:46:51.825651",
+     "start_time": "2025-10-27T06:20:06.215349",
      "status": "completed"
     },
     "tags": []
    },
    "outputs": [],
    "source": [
-    "#For raw XGBoost or LightGBM submission:\n",
-    "#submission['accident_risk'] = np.clip(xgb_preds, 0, 1)  # or lgb_preds\n",
-    "#submission.to_csv('submission_xgb.csv', index=False)\n",
-    "#submission.to_csv('submission_lgb.csv', index=False)"
+    "# submission['accident_risk'] = np.clip(0.45*xgb_preds + 0.35*lgb_preds + 0.20*cat_preds, 0, 1)\n",
+    "# submission.to_csv('submission_blend.csv', index=False)"
    ]
   }
  ],
@@ -629,14 +736,14 @@
   },
   "papermill": {
    "default_parameters": {},
-   "duration": 1149.387293,
-   "end_time": "2025-10-26T19:46:53.065327",
+   "duration": 1426.271395,
+   "end_time": "2025-10-27T06:20:07.659302",
    "environment_variables": {},
    "exception": null,
    "input_path": "__notebook__.ipynb",
    "output_path": "__notebook__.ipynb",
    "parameters": {},
-   "start_time": "2025-10-26T19:27:43.678034",
+   "start_time": "2025-10-27T05:56:21.387907",
    "version": "2.6.0"
   }
  },
